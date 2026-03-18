@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeartInsight | Advanced AI Cardiac Health Prediction</title>
+    <meta name="description" content="Predict heart disease risk using advanced Machine Learning models.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="background-overlay"></div>
+    <div class="heart-pulse"></div>
+    
+    <header>
+        <div class="logo">
+            <span class="pulse-dot"></span>
+            <h1>HeartInsight</h1>
+        </div>
+        <p class="subtitle">AI-Powered Cardiac Risk Intelligence</p>
+    </header>
+
+    <main class="container">
+        <div class="hero-section">
+            <div class="hero-text">
+                <h2>Predict Your Heart Health Status</h2>
+                <p>Enter clinical parameters to analyze the probability of cardiac conditions using our state-of-the-art Random Forest predictive model.</p>
+            </div>
+            <div class="hero-image-container">
+                <img src="/static/medical_heart.png" alt="Medical Heart Prediction" id="hero-heart">
+            </div>
+        </div>
+
+        <section class="prediction-card glass">
+            <form id="prediction-form">
+                <div class="form-grid">
+                    <!-- Demographic Info -->
+                    <div class="input-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" placeholder="e.g. 45" required min="1" max="120">
+                    </div>
+                    <div class="input-group">
+                        <label for="sex">Biological Sex</label>
+                        <select id="sex" name="sex" required>
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+
+                    <!-- Cardiac Metrics -->
+                    <div class="input-group">
+                        <label for="cp">Chest Pain Type</label>
+                        <select id="cp" name="cp" required>
+                            <option value="0">Typical Angina</option>
+                            <option value="1">Atypical Angina</option>
+                            <option value="2">Non-anginal Pain</option>
+                            <option value="3">Asymptomatic</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="trestbps">Resting BP (mmHg)</label>
+                        <input type="number" id="trestbps" name="trestbps" placeholder="e.g. 120" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="chol">Cholesterol (mg/dl)</label>
+                        <input type="number" id="chol" name="chol" placeholder="e.g. 200" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="thalach">Max Heart Rate</label>
+                        <input type="number" id="thalach" name="thalach" placeholder="e.g. 150" required>
+                    </div>
+
+                    <!-- Specialized Metrics -->
+                    <div class="input-group">
+                        <label for="fbs">Fasting Blood Sugar > 120</label>
+                        <select id="fbs" name="fbs" required>
+                            <option value="0">False</option>
+                            <option value="1">True</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="restecg">Resting ECG Results</label>
+                        <select id="restecg" name="restecg" required>
+                            <option value="0">Normal</option>
+                            <option value="1">ST-T Wave Abnormality</option>
+                            <option value="2">Left Ventricular Hypertrophy</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="exang">Exercise Induced Angina</label>
+                        <select id="exang" name="exang" required>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="oldpeak">Oldpeak (ST Depression)</label>
+                        <input type="number" step="0.1" id="oldpeak" name="oldpeak" placeholder="e.g. 1.5" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="slope">ST Slope</label>
+                        <select id="slope" name="slope" required>
+                            <option value="0">Upsloping</option>
+                            <option value="1">Flat</option>
+                            <option value="2">Downsloping</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="ca">Vessels Colored by Fluoroscopy</label>
+                        <select id="ca" name="ca" required>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="input-group full-width">
+                        <label for="thal">Thalassemia Category</label>
+                        <select id="thal" name="thal" required>
+                            <option value="0">None / Normal</option>
+                            <option value="1">Fixed Defect</option>
+                            <option value="2">Normal Flow</option>
+                            <option value="3">Reversible Defect</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" id="predict-btn" class="glow-button">Analyze Health Probability</button>
+            </form>
+
+            <div id="results-area" class="results hidden">
+                <div class="result-box glass-accent">
+                    <h3>Risk Assessment</h3>
+                    <div id="gauge-container" class="gauge">
+                        <svg viewBox="0 0 100 50">
+                            <path d="M10 50 A40 40 0 0 1 90 50" fill="none" stroke="#eee" stroke-width="8"/>
+                            <path id="gauge-progress" d="M10 50 A40 40 0 0 1 90 50" fill="none" stroke="var(--accent-color)" stroke-width="8" stroke-dasharray="125" stroke-dashoffset="125"/>
+                        </svg>
+                        <span id="risk-score">0%</span>
+                    </div>
+                    <p id="risk-text">Calculating status...</p>
+                    <div id="prediction-status" class="status-badge"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 HeartInsight | Designed with Aesthetic precision.</p>
+    </footer>
+
+    <script src="static/script.js"></script>
+</body>
+</html>
