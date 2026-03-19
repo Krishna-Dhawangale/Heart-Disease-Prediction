@@ -16,7 +16,8 @@ if not os.path.exists("static"):
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Load the model
-with open("model.pkl", "rb") as f:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(BASE_DIR, "model.pkl"), "rb") as f:
     model = pickle.load(f)
 
 # Define the prediction input schema
@@ -37,7 +38,7 @@ class PredictionInput(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def read_index():
-    with open("static/index.html", "r") as f:
+    with open(os.path.join(BASE_DIR, "static", "index.html"), "r") as f:
         return f.read()
 
 @app.post("/predict")
