@@ -1,8 +1,6 @@
 ﻿fastapi
 pydantic
 pandas
-numpy
-scikit-learn==1.7.2
+numpy==1.26.4
+scikit-learn==1.6.1
 python-multipart
-jinja2
-uvicorn
