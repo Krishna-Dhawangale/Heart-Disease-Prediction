@@ -15,10 +15,21 @@ if not os.path.exists("static"):
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Load the model
+# Load the model with robust path handling
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-with open(os.path.join(BASE_DIR, "model.pkl"), "rb") as f:
-    model = pickle.load(f)
+model_path = os.path.join(BASE_DIR, "model.pkl")
+
+try:
+    with open(model_path, "rb") as f:
+        model = pickle.load(f)
+    logger.info("Successfully loaded model")
+except Exception as e:
+    logger.error(f"Failed to load model from {model_path}: {str(e)}")
+    model = None # Fallback or handle later
 
 # Define the prediction input schema
 class PredictionInput(BaseModel):
@@ -43,6 +54,9 @@ async def read_index():
 
 @app.post("/predict")
 async def predict(data: PredictionInput):
+    if model is None:
+        return {"error": "Model not loaded. Check logs for details."}, 500
+    
     # Features as expected by the model (needs to be a DataFrame to avoid warnings)
     features_df = pd.DataFrame([{
         'age': data.age,
